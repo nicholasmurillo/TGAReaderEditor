@@ -22,6 +22,12 @@ struct Header {
     short height;
     char bitsPerPixel;
     char imageDescriptor;
+    void set_Header_input(const string& fileName) {
+        this->input.open(fileName.c_str(), ios_base::out | ios_base::binary);
+    }
+    void set_Header_output(const string& fileName) {
+        this->output.open(fileName.c_str(), ios_base::out | ios_base::binary);
+    }
     void read_idLength() {
         input.read(reinterpret_cast<char *>(&this->idLength), sizeof(this->idLength));
     }
@@ -121,12 +127,6 @@ struct Header {
         this->write_height();
         this->write_bitsPerPixel();
         this->write_imageDescriptor();
-    }
-    void set_Header_input(const string& fileName) {
-        this->input.open(fileName.c_str(), ios_base::out | ios_base::binary);
-    }
-    void set_Header_output(const string& fileName) {
-        this->output.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
     void print() {
         cout << "idLength = " << (int)this->idLength << endl;

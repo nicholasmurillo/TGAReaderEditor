@@ -13,12 +13,6 @@ struct Pixel {
     unsigned char blue;
     unsigned char green;
     unsigned char red;
-    void set_Pixel_input(const string& fileName) {
-        this->input.open(fileName.c_str(), ios_base::out | ios_base::binary);
-    }
-    void set_Pixel_output(const string& fileName) {
-        this->output.open(fileName.c_str(), ios_base::out | ios_base::binary);
-    }
     void read_blue() {
         input.read(reinterpret_cast<char *>(&this->blue), sizeof(this->blue));
     }

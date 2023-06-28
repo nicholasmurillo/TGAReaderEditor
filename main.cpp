@@ -25,9 +25,12 @@ ofstream part10("ImageProcessing Summer 2023/output/part10.tga", ios_base::out |
 int main() {
     Header temp;
     temp.set_Header_input("ImageProcessing Summer 2023/input/car.tga");
+    temp.set_Header_output("ImageProcessing Summer 2023/output/test_output.tga");
     if(temp.input.is_open()) {
-        temp.read_all();
-        temp.print();
+        if(temp.output.is_open()) {
+            temp.read_all();
+            temp.print();
+        }
     }
     return 0;
 }
