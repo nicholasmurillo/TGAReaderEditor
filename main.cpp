@@ -203,7 +203,7 @@ void part10_edit() {
     edit.set_Picture_output(part10);
     edit.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
-        main.array[((unsigned int)(main.width * main.height)) - i] = edit.array[i];
+        main.array[((unsigned int)(main.width * main.height)) - i - 1] = edit.array[i];
     }
     main.write_all();
 }
