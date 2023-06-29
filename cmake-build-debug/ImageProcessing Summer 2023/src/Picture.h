@@ -7,6 +7,11 @@
 
 #endif //PROJECT2_HEADER_H
 
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
 ifstream input;
 ofstream output;
 
@@ -134,7 +139,7 @@ struct Picture {
     void write_imageDescriptor() {
         output.write(reinterpret_cast<char *>(&this->imageDescriptor), sizeof(this->imageDescriptor));
     }
-    void write_all() {
+    void write_Header() {
         this->write_idLength();
         this->write_colorMapType();
         this->write_dataTypeCode();
@@ -147,23 +152,12 @@ struct Picture {
         this->write_height();
         this->write_bitsPerPixel();
         this->write_imageDescriptor();
+    }
+    void write_all() {
+        this->write_Header();
         for(unsigned int i = 0; i < (unsigned int)(this->width * this->height); i++) {
             this->array[i].write_pixel();
         }
-    }
-    void print() {
-        cout << "idLength = " << (int)this->idLength << endl;
-        cout << "colorMapType = " << (int)this->colorMapType << endl;
-        cout << "dataTypeCode = " << (int)this->dataTypeCode << endl;
-        cout << "colorMapOrigin = " << this->colorMapOrigin << endl;
-        cout << "colorMapLength = " << this->colorMapLength << endl;
-        cout << "colorMapDepth = " << (int)this->colorMapDepth << endl;
-        cout << "xOrigin = " << this->xOrigin << endl;
-        cout << "yOrigin = " << this->yOrigin << endl;
-        cout << "width = " << this->width << endl;
-        cout << "height = " << this->height << endl;
-        cout << "bitsPerPixel = " << (int)this->bitsPerPixel << endl;
-        cout << "imageDescriptor = " << (int)this->imageDescriptor << endl;
     }
     Picture() {}
     Picture(const Picture& other) {
