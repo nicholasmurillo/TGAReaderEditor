@@ -32,6 +32,9 @@ struct Picture {
         input.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
     void set_Picture_output(const string& fileName) {
+        if(output.is_open()){
+            output.close();
+        }
         output.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
     void read_idLength() {
@@ -144,6 +147,9 @@ struct Picture {
         this->write_height();
         this->write_bitsPerPixel();
         this->write_imageDescriptor();
+        for(unsigned int i = 0; i < (unsigned int)(this->width * this->height); i++) {
+            this->array[i].write_pixel();
+        }
     }
     void print() {
         cout << "idLength = " << (int)this->idLength << endl;
