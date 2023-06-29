@@ -7,9 +7,10 @@
 
 #endif //PROJECT2_HEADER_H
 
-struct Header {
-    ifstream input;
-    ofstream output;
+ifstream input;
+ofstream output;
+
+struct Picture {
     char idLength;
     char colorMapType;
     char dataTypeCode;
@@ -22,11 +23,16 @@ struct Header {
     short height;
     char bitsPerPixel;
     char imageDescriptor;
-    void set_Header_input(const string& fileName) {
-        this->input.open(fileName.c_str(), ios_base::out | ios_base::binary);
+#include "Pixel.h"
+    Pixel* array = nullptr;
+    void set_Picture_input(const string& fileName) {
+        if(input.is_open()){
+            input.close();
+        }
+        input.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
-    void set_Header_output(const string& fileName) {
-        this->output.open(fileName.c_str(), ios_base::out | ios_base::binary);
+    void set_Picture_output(const string& fileName) {
+        output.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
     void read_idLength() {
         input.read(reinterpret_cast<char *>(&this->idLength), sizeof(this->idLength));
@@ -64,7 +70,7 @@ struct Header {
     void read_imageDescriptor() {
         input.read(reinterpret_cast<char *>(&this->imageDescriptor), sizeof(this->imageDescriptor));
     }
-    void read_all() {
+    void read_Header() {
         this->read_idLength();
         this->read_colorMapType();
         this->read_dataTypeCode();
@@ -77,6 +83,17 @@ struct Header {
         this->read_height();
         this->read_bitsPerPixel();
         this->read_imageDescriptor();
+    }
+    void read_all_pixels() {
+        auto* pix = new Pixel[(unsigned int)(this->width * this->height)];
+        for(unsigned int i = 0; i < (unsigned int)(this->width * this->height); i++) {
+            pix[i].read_pixel();
+        }
+        this->array = pix;
+    }
+    void read_all() {
+        this->read_Header();
+        this->read_all_pixels();
     }
     void write_idLength() {
         output.write(reinterpret_cast<char *>(&this->idLength), sizeof(this->idLength));
@@ -142,8 +159,8 @@ struct Header {
         cout << "bitsPerPixel = " << (int)this->bitsPerPixel << endl;
         cout << "imageDescriptor = " << (int)this->imageDescriptor << endl;
     }
-    Header() {}
-    Header(const Header& other) {
+    Picture() {}
+    Picture(const Picture& other) {
         this->idLength = other.idLength;
         this->colorMapType = other.colorMapType;
         this->dataTypeCode = other.dataTypeCode;
@@ -156,7 +173,7 @@ struct Header {
         this->bitsPerPixel = other.bitsPerPixel;
         this->imageDescriptor = other.imageDescriptor;
     }
-    Header operator=(const Header& other) {
+    Picture operator=(const Picture& other) {
         this->idLength = other.idLength;
         this->colorMapType = other.colorMapType;
         this->dataTypeCode = other.dataTypeCode;
@@ -170,5 +187,7 @@ struct Header {
         this->imageDescriptor = other.imageDescriptor;
         return *this;
     }
-    ~Header() {}
+    ~Picture() {
+        delete[] array;
+    }
 };

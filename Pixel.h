@@ -8,8 +8,6 @@
 #endif //PROJECT2_CELL_H
 
 struct Pixel {
-    ifstream input;
-    ofstream output;
     unsigned char blue;
     unsigned char green;
     unsigned char red;

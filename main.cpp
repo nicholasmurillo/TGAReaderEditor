@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -19,18 +18,24 @@ ofstream part9("ImageProcessing Summer 2023/output/part9.tga", ios_base::out | i
 ofstream part10("ImageProcessing Summer 2023/output/part10.tga", ios_base::out | ios_base::binary);
  */
 
-#include "Header.h"
+#include "Picture.h"
 #include "Pixel.h"
 
+const string car = "ImageProcessing Summer 2023/input/car.tga";
+const string layer1 = "ImageProcessing Summer 2023/input/layer1.tga";
+const string pattern1 = "ImageProcessing Summer 2023/input/pattern1.tga";
+const string layer2 = "ImageProcessing Summer 2023/input/layer2.tga";
+const string pattern2 = "ImageProcessing Summer 2023/input/pattern2.tga";
+
 int main() {
-    Header temp;
-    temp.set_Header_input("ImageProcessing Summer 2023/input/car.tga");
-    temp.set_Header_output("ImageProcessing Summer 2023/output/test_output.tga");
-    if(temp.input.is_open()) {
-        if(temp.output.is_open()) {
-            temp.read_all();
-            temp.print();
-        }
+    Picture main;
+    main.set_Picture_input(layer1);
+    main.read_all();
+    Picture part1;
+    part1.set_Picture_input(pattern1);
+    part1.read_all();
+    for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
+        main.array[i] * part1.array[i];
     }
     return 0;
 }
