@@ -3,34 +3,35 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#include "Picture.h"
+#include "Pixel.h"
+
 using namespace std;
 
-#include "cmake-build-debug/ImageProcessing Summer 2023/src/Picture.h"
-#include "cmake-build-debug/ImageProcessing Summer 2023/src/Pixel.h"
-
-const string part1 = "ImageProcessing Summer 2023/output/part1.tga";
-const string part2 = "ImageProcessing Summer 2023/output/part2.tga";
-const string part3 = "ImageProcessing Summer 2023/output/part3.tga";
-const string part4 = "ImageProcessing Summer 2023/output/part4.tga";
-const string part5 = "ImageProcessing Summer 2023/output/part5.tga";
-const string part6 = "ImageProcessing Summer 2023/output/part6.tga";
-const string part7 = "ImageProcessing Summer 2023/output/part7.tga";
-const string part8_r = "ImageProcessing Summer 2023/output/part8_r.tga";
-const string part8_g = "ImageProcessing Summer 2023/output/part8_g.tga";
-const string part8_b = "ImageProcessing Summer 2023/output/part8_b.tga";
-const string part9 = "ImageProcessing Summer 2023/output/part9.tga";
-const string part10 = "ImageProcessing Summer 2023/output/part10.tga";
-const string car = "ImageProcessing Summer 2023/input/car.tga";
-const string circles = "ImageProcessing Summer 2023/input/circles.tga";
-const string layer1 = "ImageProcessing Summer 2023/input/layer1.tga";
-const string layer2 = "ImageProcessing Summer 2023/input/layer2.tga";
-const string layer_blue = "ImageProcessing Summer 2023/input/layer_blue.tga";
-const string layer_green = "ImageProcessing Summer 2023/input/layer_green.tga";
-const string layer_red = "ImageProcessing Summer 2023/input/layer_red.tga";
-const string pattern1 = "ImageProcessing Summer 2023/input/pattern1.tga";
-const string pattern2 = "ImageProcessing Summer 2023/input/pattern2.tga";
-const string text = "ImageProcessing Summer 2023/input/text.tga";
-const string text2 = "ImageProcessing Summer 2023/input/text2.tga";
+const string part1 = "output/part1.tga";
+const string part2 = "output/part2.tga";
+const string part3 = "output/part3.tga";
+const string part4 = "output/part4.tga";
+const string part5 = "output/part5.tga";
+const string part6 = "output/part6.tga";
+const string part7 = "output/part7.tga";
+const string part8_r = "output/part8_r.tga";
+const string part8_g = "output/part8_g.tga";
+const string part8_b = "output/part8_b.tga";
+const string part9 = "output/part9.tga";
+const string part10 = "output/part10.tga";
+const string car = "input/car.tga";
+const string circles = "input/circles.tga";
+const string layer1 = "input/layer1.tga";
+const string layer2 = "input/layer2.tga";
+const string layer_blue = "input/layer_blue.tga";
+const string layer_green = "input/layer_green.tga";
+const string layer_red = "input/layer_red.tga";
+const string pattern1 = "input/pattern1.tga";
+const string pattern2 = "input/pattern2.tga";
+const string text = "input/text.tga";
+const string text2 = "input/text2.tga";
 
 
 void part1_edit() {
@@ -197,13 +198,12 @@ void part10_edit() {
     main.set_Picture_input(text2);
     main.set_Picture_output(part10);
     main.read_all();
-    main.write_Header();
     Picture edit;
     edit.set_Picture_input(text2);
     edit.set_Picture_output(part10);
     edit.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
-        main.array[((unsigned int)(main.width * main.height)) - i - 1] = edit.array[i];
+        main.array[((unsigned int)(main.width) * (unsigned int)(main.height)) - i - 1] = edit.array[i];
     }
     main.write_all();
 }

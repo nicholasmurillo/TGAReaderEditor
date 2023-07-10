@@ -7,42 +7,41 @@
 
 #endif //PROJECT2_CELL_H
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
 struct Pixel {
     unsigned char blue;
     unsigned char green;
     unsigned char red;
-    void read_blue() {
-        input.read(reinterpret_cast<char *>(&this->blue), sizeof(this->blue));
+    void read_blue(std::ifstream& other) {
+        other.read(reinterpret_cast<char *>(&this->blue), sizeof(this->blue));
     }
-    void read_green() {
-        input.read(reinterpret_cast<char *>(&this->green), sizeof(this->green));
+    void read_green(std::ifstream& other) {
+        other.read(reinterpret_cast<char *>(&this->green), sizeof(this->green));
     }
-    void read_red() {
-        input.read(reinterpret_cast<char *>(&this->red), sizeof(this->red));
+    void read_red(std::ifstream& other) {
+        other.read(reinterpret_cast<char *>(&this->red), sizeof(this->red));
     }
-    void read_pixel() {
-        this->read_blue();
-        this->read_green();
-        this->read_red();
+    void read_pixel(std::ifstream& other) {
+        this->read_blue(other);
+        this->read_green(other);
+        this->read_red(other);
     }
-    void write_blue() {
-        output.write(reinterpret_cast<char *>(&this->blue), sizeof(this->blue));
+    void write_blue(std::ofstream& other) {
+        other.write(reinterpret_cast<char *>(&this->blue), sizeof(this->blue));
     }
-    void write_green() {
-        output.write(reinterpret_cast<char *>(&this->green), sizeof(this->green));
+    void write_green(std::ofstream& other) {
+        other.write(reinterpret_cast<char *>(&this->green), sizeof(this->green));
     }
-    void write_red() {
-        output.write(reinterpret_cast<char *>(&this->red), sizeof(this->red));
+    void write_red(std::ofstream& other) {
+        other.write(reinterpret_cast<char *>(&this->red), sizeof(this->red));
     }
-    void write_pixel() {
-        this->write_blue();
-        this->write_green();
-        this->write_red();
-    }
-    void print_values() const {
-        cout << "Blue value of pixel is: " << (int)this->blue << endl;
-        cout << "Green value of pixel is: " << (int)this->green << endl;
-        cout << "Red value of pixel is : " << (int)this->red << endl;
+    void write_pixel(std::ofstream& other) {
+        this->write_blue(other);
+        this->write_green(other);
+        this->write_red(other);
     }
     void screen(const Pixel& other) {
         float temp_green = 1 - ((float)this->green / 255);

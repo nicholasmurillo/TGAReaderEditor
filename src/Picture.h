@@ -12,10 +12,9 @@
 #include <string>
 using namespace std;
 
-ifstream input;
-ofstream output;
-
 struct Picture {
+    ifstream input;
+    ofstream output;
     char idLength;
     char colorMapType;
     char dataTypeCode;
@@ -95,7 +94,7 @@ struct Picture {
     void read_all_pixels() {
         auto* pix = new Pixel[(unsigned int)(this->width * this->height)];
         for(unsigned int i = 0; i < (unsigned int)(this->width * this->height); i++) {
-            pix[i].read_pixel();
+            pix[i].read_pixel(this->input);
         }
         this->array = pix;
     }
@@ -156,7 +155,7 @@ struct Picture {
     void write_all() {
         this->write_Header();
         for(unsigned int i = 0; i < (unsigned int)(this->width * this->height); i++) {
-            this->array[i].write_pixel();
+            this->array[i].write_pixel(this->output);
         }
     }
     Picture() {}
