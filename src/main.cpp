@@ -35,6 +35,7 @@ const string pattern2 = "input/pattern2.tga";
 const string text = "input/text.tga";
 const string text2 = "input/text2.tga";
 vector<string> files = {part1, part2, part3, part4, part5, part6, part7, part8_r, part8_g, part8_b, part9, part10, car, circles, layer1, layer2, layer_blue, layer_green, layer_red, pattern1, pattern2, text, text2};
+vector<string> methods = {"multiply", "subtract", "overlay", "screen", "combine", "flip", "onlyred", "onlygreen", "onlyblue", "addred", "addgreen", "addblue", "scalered", "scalegreen", "scaleblue"};
 
 void part1_edit() {
     Picture main;
@@ -235,7 +236,6 @@ bool hasEnding(const string& test) {
 void multiply(const string& out, const string& first, const string& second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     Picture edit;
     edit.set_Picture_input(second);
@@ -243,13 +243,17 @@ void multiply(const string& out, const string& first, const string& second) {
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i] * edit.array[i];
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void subtract(const string& out, const string& first, const string& second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     Picture edit;
     edit.set_Picture_input(second);
@@ -257,13 +261,17 @@ void subtract(const string& out, const string& first, const string& second) {
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i] - edit.array[i];
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void overlay(const string& out, const string& first, const string& second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     Picture edit;
     edit.set_Picture_input(second);
@@ -271,13 +279,17 @@ void overlay(const string& out, const string& first, const string& second) {
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].overlay(edit.array[i]);
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void screen(const string& out, const string& first, const string& second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     Picture edit;
     edit.set_Picture_input(second);
@@ -285,13 +297,17 @@ void screen(const string& out, const string& first, const string& second) {
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].screen(edit.array[i]);
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void combine(const string& out, const string& first, const string& second, const string& third) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     Picture edit;
     edit.set_Picture_input(second);
@@ -304,6 +320,11 @@ void combine(const string& out, const string& first, const string& second, const
     edit2.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].blue = edit2.array[i].blue;
+    }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
     }
     main.write_all();
 }
@@ -322,14 +343,38 @@ void flip(const string& out, const string& first) {
     main.write_all();
 }
 
+void flip_itself(const string& only) {
+    Picture main;
+    main.set_Picture_input(only);
+    main.read_all();
+    Pixel* temp = new Pixel[(unsigned int)(main.width) * (unsigned int)(main.height)];
+    for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
+        temp[i].blue = main.array[i].blue;
+        temp[i].green = main.array[i].green;
+        temp[i].red = main.array[i].red;
+    }
+    for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
+        main.array[((unsigned int)(main.width) * (unsigned int)(main.height)) - i - 1].red = temp[i].red;
+        main.array[((unsigned int)(main.width) * (unsigned int)(main.height)) - i - 1].green = temp[i].green;
+        main.array[((unsigned int)(main.width) * (unsigned int)(main.height)) - i - 1].blue = temp[i].blue;
+    }
+    delete[] temp;
+    main.replace_output(only);
+    main.write_all();
+}
+
 void only_red(const string& out, const string& first) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].blue = main.array[i].red;
         main.array[i].green = main.array[i].red;
+    }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
     }
     main.write_all();
 }
@@ -337,11 +382,15 @@ void only_red(const string& out, const string& first) {
 void only_green(const string& out, const string& first) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].red = main.array[i].green;
         main.array[i].blue = main.array[i].green;
+    }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
     }
     main.write_all();
 }
@@ -349,11 +398,15 @@ void only_green(const string& out, const string& first) {
 void only_blue(const string& out, const string& first) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         main.array[i].red = main.array[i].blue;
         main.array[i].green = main.array[i].blue;
+    }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
     }
     main.write_all();
 }
@@ -361,7 +414,6 @@ void only_blue(const string& out, const string& first) {
 void add_red(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if((unsigned int)main.array[i].red + second >= 255) {
@@ -370,13 +422,17 @@ void add_red(const string& out, const string& first, int second) {
             main.array[i].red += second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void add_green(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if((unsigned int)main.array[i].green + second >= 255) {
@@ -385,13 +441,17 @@ void add_green(const string& out, const string& first, int second) {
             main.array[i].green += second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void add_blue(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if((unsigned int)main.array[i].blue + second >= 255) {
@@ -400,13 +460,17 @@ void add_blue(const string& out, const string& first, int second) {
             main.array[i].blue += second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void scale_red(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if(main.array[i].red * second >= 255) {
@@ -415,13 +479,17 @@ void scale_red(const string& out, const string& first, int second) {
             main.array[i].red *= second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void scale_green(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if(main.array[i].green * second >= 255) {
@@ -430,13 +498,17 @@ void scale_green(const string& out, const string& first, int second) {
             main.array[i].green *= second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 void scale_blue(const string& out, const string& first, int second) {
     Picture main;
     main.set_Picture_input(first);
-    main.set_Picture_output(out);
     main.read_all();
     for(unsigned int i = 0; i < (unsigned int)(main.width * main.height); i++) {
         if(main.array[i].blue * second >= 255) {
@@ -445,12 +517,16 @@ void scale_blue(const string& out, const string& first, int second) {
             main.array[i].blue *= second;
         }
     }
+    if(out == first) {
+        main.replace_output(out);
+    } else {
+        main.set_Picture_output(out);
+    }
     main.write_all();
 }
 
 int main(int argc, const char** argv) {
     run_all_edits();
-    // TODO: FOR LOOP TO GO THRU COMMANDS FOR INPUT FILE, GIVEN OUTPUT BECOMES NEW INPUT (GET RID OF .WRITE_ALL)
     if(argc == 1) {
         cout << "Project 2: Image Processing, Summer 2023" << endl << endl;
         cout << "Usage:" << endl << "\t./project2.out [output] [firstImage] [method] [...]";
@@ -462,131 +538,219 @@ int main(int argc, const char** argv) {
             cout << "Usage:" << endl << "\t./project2.out [output] [firstImage] [method] [...]";
             return 0;
         }
-        if(hasEnding(argv[1])) {
-            return 0;
-        }
         cout << "Invalid file name." << endl;
     }
     if(argc > 2) {
+        if(not hasEnding(argv[2])) {
+            cout << "Invalid file name." << endl;
+            return 0;
+        }
         if(find(files.begin(), files.end(), argv[2]) == files.end()) {
             cout << "File does not exist." << endl;
             return 0;
         }
-        if(strcmp(argv[3], "multiply") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+        for(unsigned int i = 3; i < argc; i++) {
+            if(strcmp(argv[i], "multiply") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                if(not hasEnding(argv[i - 1])) {
+                    cout << "Invalid file name." << endl;
+                }
+                if((argc >= i + 1) && (not hasEnding(argv[i + 1]))) {
+                    cout << "Invalid file name." << endl;
+                }
+                if(i == 3) {
+                    multiply(argv[1], argv[2], argv[4]);
+                } else {
+                    multiply(argv[1], argv[1], argv[i + 1]);
+                }
             }
-            multiply(argv[1], argv[2], argv[4]);
-        }
-        else if(strcmp(argv[3], "subtract") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "subtract") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                if(not hasEnding(argv[i - 1])) {
+                    cout << "Invalid file name." << endl;
+                }
+                if((argc >= i + 1) && (not hasEnding(argv[i + 1]))) {
+                    cout << "Invalid file name." << endl;
+                }
+                if(i == 3) {
+                    subtract(argv[1], argv[2], argv[4]);
+                } else {
+                    subtract(argv[1], argv[1], argv[i + 1]);
+                }
             }
-            subtract(argv[1], argv[2], argv[4]);
-        }
-        else if(strcmp(argv[3], "overlay") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "overlay") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                if(not hasEnding(argv[i - 1])) {
+                    cout << "Invalid file name." << endl;
+                }
+                if((argc >= i + 1) && (not hasEnding(argv[i + 1]))) {
+                    cout << "Invalid file name." << endl;
+                }
+                if(i == 3) {
+                    overlay(argv[1], argv[2], argv[4]);
+                } else {
+                    overlay(argv[1], argv[1], argv[i + 1]);
+                }
             }
-            overlay(argv[1], argv[2], argv[4]);
-        }
-        else if(strcmp(argv[3], "screen") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "screen") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                if(not hasEnding(argv[i - 1])) {
+                    cout << "Invalid file name." << endl;
+                }
+                if((argc >= i + 1) && (not hasEnding(argv[i + 1]))) {
+                    cout << "Invalid file name." << endl;
+                }
+                if(i == 3) {
+                    screen(argv[1], argv[2], argv[4]);
+                } else {
+                    screen(argv[1], argv[1], argv[i + 1]);
+                }
             }
-            screen(argv[1], argv[2], argv[4]);
-        }
-        else if(strcmp(argv[3], "combine") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "combine") == 0) {
+                if(argc <= i + 2) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                if(i == 3) {
+                    combine(argv[1], argv[2], argv[4], argv[5]);
+                } else {
+                    combine(argv[1], argv[1], argv[i + 1], argv[i + 2]);
+                }
             }
-            combine(argv[1], argv[2], argv[4], argv[5]);
-        }
-        else if(strcmp(argv[3], "flip") == 0) {
-            flip(argv[1], argv[2]);
-        }
-        else if(strcmp(argv[3], "onlyred") == 0) {
-            only_red(argv[1], argv[2]);
-        }
-        else if(strcmp(argv[3], "onlygreen") == 0) {
-            only_green(argv[1], argv[2]);
-        }
-        else if(strcmp(argv[3], "onlyblue") == 0) {
-            only_blue(argv[1], argv[2]);
-        }
-        else if(strcmp(argv[3], "addred") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "flip") == 0) {
+                if(i == 3) {
+                    flip(argv[1], argv[2]);
+                } else {
+                    flip_itself(argv[1]);
+                }
             }
-            try{
-                add_red(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
+            else if(strcmp(argv[i], "onlyred") == 0) {
+                if(i == 3) {
+                    only_red(argv[1], argv[2]);
+                } else {
+                    only_red(argv[1], argv[1]);
+                }
             }
-        }
-        else if(strcmp(argv[3], "addgreen") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "onlygreen") == 0) {
+                if(i == 3) {
+                    only_green(argv[1], argv[2]);
+                } else {
+                    only_green(argv[1], argv[1]);
+                }
             }
-            try{
-                add_green(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
+            else if(strcmp(argv[i], "onlyblue") == 0) {
+                if(i == 3) {
+                    only_blue(argv[1], argv[2]);
+                } else {
+                    only_blue(argv[1], argv[1]);
+                }
             }
-        }
-        else if(strcmp(argv[3], "addblue") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "addred") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        add_red(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        add_red(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
             }
-            try{
-                add_blue(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
+            else if(strcmp(argv[i], "addgreen") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        add_green(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        add_green(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
             }
-        }
-        else if(strcmp(argv[3], "scalered") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "addblue") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        add_blue(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        add_blue(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
             }
-            try{
-                scale_red(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
+            else if(strcmp(argv[i], "scalered") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        scale_red(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        scale_red(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
             }
-        }
-        else if(strcmp(argv[3], "scalegreen") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
+            else if(strcmp(argv[i], "scalegreen") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        scale_green(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        scale_green(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
             }
-            try{
-                scale_green(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
+            else if(strcmp(argv[i], "scaleblue") == 0) {
+                if(argc == i + 1) {
+                    cout << "Missing argument." << endl;
+                    return 0;
+                }
+                try{
+                    if(i == 3) {
+                        scale_blue(argv[1], argv[2], stoi(argv[4]));
+                    } else {
+                        scale_blue(argv[1], argv[1], stoi(argv[i + 1]));
+                    }
+                } catch(invalid_argument) {
+                    cout << "Invalid argument, expected number." << endl;
+                }
+            } else if(find(methods.begin(), methods.end(), argv[i]) == methods.end()) {
+                cout << "Invalid method name." << endl;
+            } else {
+                continue;
             }
-        }
-        else if(strcmp(argv[3], "scaleblue") == 0) {
-            if(argc == 4) {
-                cout << "Missing argument." << endl;
-                return 0;
-            }
-            try{
-                scale_blue(argv[1], argv[2], stoi(argv[4]));
-            } catch(invalid_argument) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        else {
-            cout << "Invalid method name." << endl;
         }
     }
     return 0;

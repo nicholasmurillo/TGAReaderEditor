@@ -41,6 +41,13 @@ struct Picture {
         }
         output.open(fileName.c_str(), ios_base::out | ios_base::binary);
     }
+    void replace_output(const string& fileName) {
+        if(output.is_open()){
+            output.close();
+        }
+        remove(fileName.c_str());
+        output.open(fileName.c_str(), ios_base::out | ios_base::binary);
+    }
     void read_idLength() {
         input.read(reinterpret_cast<char *>(&this->idLength), sizeof(this->idLength));
     }
@@ -187,6 +194,6 @@ struct Picture {
         return *this;
     }
     ~Picture() {
-        delete[] array;
+        delete[] this->array;
     }
 };
